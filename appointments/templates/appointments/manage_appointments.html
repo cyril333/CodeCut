@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Appointments — CodeCut</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; display: flex; min-height: 100vh; background-color: #f2f2f2; }
+        .sidebar { width: 250px; background-color: #000; color: #fff; display: flex; flex-direction: column; padding: 30px 20px; }
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+        .sidebar-logo img { width: 36px; }
+        .sidebar-logo span { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+        .nav-item { display: block; padding: 12px 14px; border-radius: 8px; color: #ccc; text-decoration: none; font-size: 14px; margin-bottom: 6px; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.08); color: #fff; }
+        .nav-item.active { background-color: #A855F7; color: #fff; font-weight: bold; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-link { display: block; padding: 12px 14px; color: #f87171; text-decoration: none; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 18px; }
+        .main-content { flex: 1; padding: 40px; }
+        .topbar { margin-bottom: 30px; }
+        .topbar h1 { font-size: 26px; color: #111; }
+        .card { background-color: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px 8px; font-size: 14px; border-bottom: 1px solid #eee; }
+        th { color: #888; font-size: 12px; text-transform: uppercase; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .badge.pending { background-color: #fef9c3; color: #854d0e; }
+        .badge.confirmed { background-color: #eafbe7; color: #1e8e3e; }
+        .badge.cancelled { background-color: #fdecea; color: #b3261e; }
+        .badge.paid { background-color: #eafbe7; color: #1e8e3e; }
+        .badge.unpaid { background-color: #f3f4f6; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="{% static 'appointments/images/blacklogo.png' %}" alt="CodeCut">
+            <span>CodeCut</span>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="nav-item">Dashboard</a>
+        <a href="{% url 'manage_appointments' %}" class="nav-item active">Manage Appointments</a>
+        <a href="#" class="nav-item">Customers</a>
+        <a href="{% url 'manage_services' %}" class="nav-item">Services</a>
+        <a href="#" class="nav-item">Profile</a>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar"><h1>Manage Appointments</h1></div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in appointments %}
+                    <tr>
+                        <td>{{ appt.customer.profile.first_name }} {{ appt.customer.profile.last_name }}</td>
+                        <td>{{ appt.service.name }}</td>
+                        <td>{{ appt.appointment_date }}</td>
+                        <td>{{ appt.appointment_time }}</td>
+                        <td><span class="badge {{ appt.status }}">{{ appt.get_status_display }}</span></td>
+                        <td><span class="badge {{ appt.pay_status }}">{{ appt.get_pay_status_display }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6">No appointments yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

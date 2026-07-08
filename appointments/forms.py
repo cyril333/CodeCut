@@ -23,3 +23,11 @@ class RegistrationForm(forms.Form):
             raise forms.ValidationError("Passwords do not match.")
 
         return cleaned_data
+
+from .models import Service
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'bill', 'status']
+

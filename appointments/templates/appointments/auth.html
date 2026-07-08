@@ -1,0 +1,325 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeCut — Login / Register</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #000;
+        }
+
+        /* LEFT PANEL — plain black, big logo */
+        .left-panel {
+            flex: 1;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        .left-panel img {
+            width: 500px;
+            max-width: 90%;
+            margin-bottom: 10px;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 380px;
+            padding-left: 40px;
+        }
+
+        .tagline {
+            color: #A855F7;
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-align: left;
+            line-height: 1.4;
+            width: 100%;
+            max-width: 380px;
+            padding-left: 40px;
+        }
+
+        /* RIGHT PANEL — transparent card blended into background */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+        }
+
+        .auth-card {
+            width: 400px;
+            border-radius: 16px;
+            padding: 40px 35px;
+            background-color: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #777;
+        }
+
+        .tab.active {
+            color: #A855F7;
+            border-bottom: 3px solid #A855F7;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #ccc;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background-color: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #A855F7;
+        }
+
+        input::placeholder {
+            color: #777;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 46px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            color: #fff;
+            background-color: #A855F7;
+            border: none;
+            border-radius: 6px;
+            padding: 0;
+        }
+
+        .toggle-password:hover {
+            background-color: #9333EA;
+        }
+
+        .toggle-password svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button.submit-btn:hover {
+            background-color: #A855F7;
+        }
+
+        .error-msg {
+            background: #fdecea;
+            color: #b3261e;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .success-msg {
+            background: #eafbe7;
+            color: #1e8e3e;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .errorlist {
+            list-style: none;
+            color: #b3261e;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="left-panel">
+        <img src="{% static 'appointments/images/blacklogo.png' %}" alt="CodeCut Logo">
+        <div class="brand-name">CodeCut</div>
+        <div class="tagline">Book. Fade.<br>Repeat.</div>
+    </div>
+
+    <div class="right-panel">
+        <div class="auth-card">
+            <div class="tabs">
+                <div class="tab active" onclick="showForm('login')" id="tab-login">Login</div>
+                <div class="tab" onclick="showForm('register')" id="tab-register">Register</div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="success-msg">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- LOGIN FORM -->
+            <div class="form-section active" id="login-section">
+                {% if login_form_errors %}
+                    <div class="error-msg">{{ login_form_errors }}</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" id="login-password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" name="login_submit" class="submit-btn">Log In</button>
+                </form>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div class="form-section" id="register-section">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>First Name</label>
+                        {{ register_form.first_name }}
+                        {{ register_form.first_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        {{ register_form.last_name }}
+                        {{ register_form.last_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        {{ register_form.email }}
+                        {{ register_form.email.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            {{ register_form.password }}
+                            <button type="button" class="toggle-password" onclick="togglePassword('id_password', this)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        {{ register_form.password.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="password-wrapper">
+                            {{ register_form.confirm_password }}
+                            <button type="button" class="toggle-password" onclick="togglePassword('id_confirm_password', this)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        {{ register_form.confirm_password.errors }}
+                    </div>
+                    <button type="submit" name="register_submit" class="submit-btn">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showForm(type) {
+            document.getElementById('login-section').classList.toggle('active', type === 'login');
+            document.getElementById('register-section').classList.toggle('active', type === 'register');
+            document.getElementById('tab-login').classList.toggle('active', type === 'login');
+            document.getElementById('tab-register').classList.toggle('active', type === 'register');
+        }
+
+        const eyeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+        const eyeOffIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 4c7 0 11 8 11 8a20.3 20.3 0 0 1-2.68 3.9M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = eyeOffIcon;
+            } else {
+                input.type = 'password';
+                btn.innerHTML = eyeIcon;
+            }
+        }
+    </script>
+
+</body>
+</html>

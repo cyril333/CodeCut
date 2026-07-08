@@ -68,6 +68,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'appointments' / 'static']
+
+LOGIN_URL = 'auth'
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'

@@ -23,7 +23,7 @@ class Service(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    price = models.FloatField()
+    bill = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
 
     def __str__(self):

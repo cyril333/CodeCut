@@ -11,29 +11,32 @@ A web-based appointment management system for small barbershops. Customers can r
 ## Setup Instructions
 
 1. Clone the repository
-- git clone <your-repo-url>
-- cd CodeCut
 
-2. Create and activate a virtual environment
+`git clone <your-repo-url>`  
+`cd CodeCut`
 
-- python -m venv .venv
-- .venv\Scripts\activate      
+3. Create and activate a virtual environment
+   
+`python -m venv .venv`  
+`.venv\Scripts\activate`   
 
 3. Install dependencies
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 4. Create a `.env` file in the project root with the following:
 
-- DEBUG=True
-- SECRET_KEY=your-secret-key
-- DATABASE_URL=your-supabase-connection-string
+`DEBUG=True`  
+`SECRET_KEY=your-secret-key`  
+`DATABASE_URL=your-supabase-connection-string`
 
 5. Run migrations
-- python manage.py migrate
 
-6. Run the development server
-- python manage.py runserver
+`python manage.py migrate`
+
+7. Run the development server
+   
+`python manage.py runserver`
 
 ## Project Structure
 - `codecut_project/` — Django project settings

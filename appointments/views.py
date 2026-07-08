@@ -34,10 +34,13 @@ def auth_view(request):
                     username=data['email'],
                     email=data['email'],
                     password=data['password'],
+                )
+                Profile.objects.create(
+                    user=user,
                     first_name=data['first_name'],
                     last_name=data['last_name'],
+                    role='customer'
                 )
-                Profile.objects.create(user=user, role='customer')
                 messages.success(request, "Account created successfully. Please log in.")
                 return redirect('auth')
 

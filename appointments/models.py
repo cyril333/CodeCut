@@ -28,3 +28,26 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    PAY_STATUS_CHOICES = [
+        ('paid', 'Paid'),
+        ('unpaid', 'Unpaid'),
+    ]
+
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='appointments')
+    appointment_date = models.DateField()
+    appointment_time = models.TimeField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    pay_status = models.CharField(max_length=10, choices=PAY_STATUS_CHOICES, default='unpaid')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.customer.username} - {self.service.name} on {self.appointment_date}"

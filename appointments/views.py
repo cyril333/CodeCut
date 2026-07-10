@@ -69,7 +69,8 @@ def admin_dashboard(request):
 def customer_dashboard(request):
     if request.user.profile.role != 'customer':
         return redirect('admin_dashboard')
-    return render(request, 'appointments/customer_dashboard.html')
+    appointments = Appointment.objects.filter(customer=request.user).order_by('-appointment_date', '-appointment_time')
+    return render(request, 'appointments/customer_dashboard.html', {'appointments': appointments})
 
 from .models import Service
 from .forms import ServiceForm
@@ -120,3 +121,51 @@ def manage_appointments(request):
         return redirect('customer_dashboard')
     appointments = Appointment.objects.select_related('customer', 'service').all()
     return render(request, 'appointments/manage_appointments.html', {'appointments': appointments})
+
+from .forms import AppointmentForm
+
+@login_required
+def book_appointment(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.customer = request.user
+
+            conflict = Appointment.objects.filter(
+                appointment_date=appointment.appointment_date,
+                appointment_time=appointment.appointment_time,
+                status__in=['pending', 'confirmed']
+            ).exists()
+
+            if conflict:
+                messages.error(request, "That time slot is already booked. Please choose another.")
+            else:
+                appointment.save()
+                messages.success(request, "Appointment booked successfully.")
+                return redirect('customer_dashboard')
+    else:
+        form = AppointmentForm()
+
+    return render(request, 'appointments/book_appointment.html', {'form': form})
+
+@login_required
+def confirm_appointment(request, appointment_id):
+    if request.user.profile.role != 'admin':
+        return redirect('customer_dashboard')
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    appointment.status = 'confirmed'
+    appointment.save()
+    messages.success(request, "Appointment confirmed.")
+    return redirect('manage_appointments')
+
+
+@login_required
+def cancel_appointment(request, appointment_id):
+    if request.user.profile.role != 'admin':
+        return redirect('customer_dashboard')
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    appointment.status = 'cancelled'
+    appointment.save()
+    messages.success(request, "Appointment cancelled.")
+    return redirect('manage_appointments')

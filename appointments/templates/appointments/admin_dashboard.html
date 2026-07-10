@@ -1,28 +1,73 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap" rel="stylesheet">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap" rel="stylesheet">
     <title>Admin Dashboard — CodeCut</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f2f2f2;
+            --sidebar-bg: #000000;
+            --sidebar-text: #cccccc;
+            --sidebar-text-active: #ffffff;
+            --text: #111111;
+            --text-muted: #888888;
+            --card-bg: #ffffff;
+            --card-border: rgba(0,0,0,0.06);
+            --accent: #000000;
+            --accent-text: #ffffff;
+            --hover-bg: rgba(0,0,0,0.05);
+        }
+
+        html[data-theme="dark"] {
+            --bg: #0a0a0a;
+            --sidebar-bg: #000000;
+            --sidebar-text: #999999;
+            --sidebar-text-active: #ffffff;
+            --text: #f5f5f5;
+            --text-muted: #999999;
+            --card-bg: #141414;
+            --card-border: rgba(255,255,255,0.08);
+            --accent: #ffffff;
+            --accent-text: #000000;
+            --hover-bg: rgba(255,255,255,0.06);
+        }
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             min-height: 100vh;
-            background-color: #f2f2f2;
+            background-color: var(--bg);
         }
 
-        /* SIDEBAR */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .theme-toggle svg { width: 20px; height: 20px; }
+
         .sidebar {
             width: 250px;
-            background-color: #000;
+            background-color: var(--sidebar-bg);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -36,21 +81,21 @@
             margin-bottom: 40px;
         }
 
-        .sidebar-logo img {
-            width: 36px;
-        }
+        .sidebar-logo img { width: 36px; }
 
-        .sidebar-logo span {
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 1px;
+        .kumar-one-regular {
+            font-family: "Kumar One", serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 30px;
+            color: #fff;
         }
 
         .nav-item {
             display: block;
             padding: 12px 14px;
             border-radius: 8px;
-            color: #ccc;
+            color: var(--sidebar-text);
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 6px;
@@ -59,18 +104,16 @@
 
         .nav-item:hover {
             background-color: rgba(255,255,255,0.08);
-            color: #fff;
+            color: var(--sidebar-text-active);
         }
 
         .nav-item.active {
-            background-color: #A855F7;
-            color: #fff;
+            background-color: var(--accent);
+            color: var(--accent-text);
             font-weight: bold;
         }
 
-        .sidebar-footer {
-            margin-top: auto;
-        }
+        .sidebar-footer { margin-top: auto; }
 
         .logout-link {
             display: block;
@@ -82,15 +125,9 @@
             padding-top: 18px;
         }
 
-        .logout-link:hover {
-            color: #fca5a5;
-        }
+        .logout-link:hover { color: #fca5a5; }
 
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-        }
+        .main-content { flex: 1; padding: 40px; }
 
         .topbar {
             display: flex;
@@ -99,14 +136,11 @@
             margin-bottom: 30px;
         }
 
-        .topbar h1 {
-            font-size: 26px;
-            color: #111;
-        }
+        .topbar h1 { font-size: 26px; color: var(--text); }
 
         .admin-badge {
-            background-color: #A855F7;
-            color: #fff;
+            background-color: var(--accent);
+            color: var(--accent-text);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
@@ -121,58 +155,50 @@
         }
 
         .stat-card {
-            background-color: #fff;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .stat-card .label {
             font-size: 13px;
-            color: #888;
+            color: var(--text-muted);
             margin-bottom: 8px;
         }
 
         .stat-card .value {
             font-size: 32px;
             font-weight: bold;
-            color: #111;
-        }
-
-        .stat-card .value.purple {
-            color: #A855F7;
+            color: var(--text);
         }
 
         .placeholder-box {
-            background-color: #fff;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 30px;
             text-align: center;
-            color: #999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            color: var(--text-muted);
         }
-
-        .kumar-one-regular {
-            font-family: "Kumar One", serif;
-            font-weight: 400;
-            font-style: normal;
-            font-size: 30px;
-        }
-
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
     <div class="sidebar">
         <div class="sidebar-logo">
-            <img src="{% static 'appointments/images/blacklogo3.png' %}" alt="CodeCut">
+            <img src="{% static 'appointments/images/blacklogo3.png' %}" alt="CodeCut" id="theme-logo">
             <div class="kumar-one-regular">CodeCut</div>
         </div>
 
         <a href="{% url 'admin_dashboard' %}" class="nav-item active">Dashboard</a>
         <a href="{% url 'manage_appointments' %}" class="nav-item">Manage Appointments</a>
         <a href="#" class="nav-item">Customers</a>
-        <a href="{% url 'manage_services' %}" class="nav-item">Services</a>
+        <a href="{% url 'manage_services' %}" class="nav-item">Manage Services</a>
         <a href="#" class="nav-item">Profile</a>
 
         <div class="sidebar-footer">
@@ -189,7 +215,7 @@
         <div class="cards-grid">
             <div class="stat-card">
                 <div class="label">Pending Appointments</div>
-                <div class="value purple">—</div>
+                <div class="value">—</div>
             </div>
             <div class="stat-card">
                 <div class="label">Confirmed Today</div>
@@ -207,5 +233,18 @@
         </div>
     </div>
 
+    <script>
+        const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-toggle-btn').innerHTML = isDark
+                ? moonIcon
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        }
+    </script>
+
 </body>
-</html>_
+</html>

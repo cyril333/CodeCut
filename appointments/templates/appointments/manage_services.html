@@ -1,55 +1,105 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap" rel="stylesheet">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap" rel="stylesheet">
     <title>Manage Services — CodeCut</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f2f2f2;
+            --sidebar-bg: #000000;
+            --sidebar-text: #cccccc;
+            --sidebar-text-active: #ffffff;
+            --text: #111111;
+            --text-muted: #888888;
+            --card-bg: #ffffff;
+            --card-border: rgba(0,0,0,0.06);
+            --input-bg: #ffffff;
+            --input-border: #cccccc;
+            --accent: #000000;
+            --accent-text: #ffffff;
+            --row-border: #eeeeee;
+        }
+
+        html[data-theme="dark"] {
+            --bg: #0a0a0a;
+            --sidebar-bg: #000000;
+            --sidebar-text: #999999;
+            --sidebar-text-active: #ffffff;
+            --text: #f5f5f5;
+            --text-muted: #999999;
+            --card-bg: #141414;
+            --card-border: rgba(255,255,255,0.08);
+            --input-bg: rgba(255,255,255,0.06);
+            --input-border: rgba(255,255,255,0.2);
+            --accent: #ffffff;
+            --accent-text: #000000;
+            --row-border: rgba(255,255,255,0.08);
+        }
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             min-height: 100vh;
-            background-color: #f2f2f2;
+            background-color: var(--bg);
         }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .theme-toggle svg { width: 20px; height: 20px; }
 
         .sidebar {
             width: 250px;
-            background-color: #000;
+            background-color: var(--sidebar-bg);
             color: #fff;
             display: flex;
             flex-direction: column;
             padding: 30px 20px;
         }
 
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 40px;
-        }
-
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
         .sidebar-logo img { width: 36px; }
-        .sidebar-logo span { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+
+        .kumar-one-regular {
+            font-family: "Kumar One", serif;
+            font-weight: 400;
+            font-size: 30px;
+            color: #fff;
+        }
 
         .nav-item {
             display: block;
             padding: 12px 14px;
             border-radius: 8px;
-            color: #ccc;
+            color: var(--sidebar-text);
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 6px;
         }
 
-        .nav-item:hover { background-color: rgba(255,255,255,0.08); color: #fff; }
-        .nav-item.active { background-color: #A855F7; color: #fff; font-weight: bold; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.08); color: var(--sidebar-text-active); }
+        .nav-item.active { background-color: var(--accent); color: var(--accent-text); font-weight: bold; }
 
         .sidebar-footer { margin-top: auto; }
 
@@ -65,14 +115,8 @@
 
         .main-content { flex: 1; padding: 40px; }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .topbar h1 { font-size: 26px; color: #111; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .topbar h1 { font-size: 26px; color: var(--text); }
 
         .layout {
             display: grid;
@@ -82,34 +126,35 @@
         }
 
         .card {
-            background-color: #fff;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .card h2 { font-size: 16px; margin-bottom: 16px; color: #111; }
+        .card h2 { font-size: 16px; margin-bottom: 16px; color: var(--text); }
 
         .form-group { margin-bottom: 14px; }
-
-        label { display: block; font-size: 13px; margin-bottom: 6px; color: #333; }
+        label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); }
 
         input, select {
             width: 100%;
             padding: 9px 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
             border-radius: 6px;
             font-size: 14px;
             font-family: inherit;
+            background-color: var(--input-bg);
+            color: var(--text);
         }
 
-        input:focus, select:focus { outline: none; border-color: #A855F7; }
+        input:focus, select:focus { outline: none; border-color: var(--accent); }
 
         button.submit-btn {
             width: 100%;
             padding: 11px;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--accent);
+            color: var(--accent-text);
             border: none;
             border-radius: 6px;
             font-weight: bold;
@@ -118,7 +163,7 @@
             margin-top: 6px;
         }
 
-        button.submit-btn:hover { background-color: #A855F7; }
+        button.submit-btn:hover { opacity: 0.85; }
 
         table { width: 100%; border-collapse: collapse; }
 
@@ -126,18 +171,13 @@
             text-align: left;
             padding: 10px 8px;
             font-size: 14px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--row-border);
+            color: var(--text);
         }
 
-        th { color: #888; font-size: 12px; text-transform: uppercase; }
+        th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
 
-        .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
         .badge.active { background-color: #eafbe7; color: #1e8e3e; }
         .badge.inactive { background-color: #f3f4f6; color: #6b7280; }
 
@@ -153,18 +193,10 @@
             margin-right: 6px;
         }
 
-        .toggle-btn {
-            background-color: #f3e8ff;
-            color: #A855F7;
-        }
+        .toggle-btn { background-color: var(--input-bg); color: var(--text); border: 1px solid var(--input-border); }
+        .toggle-btn:hover { background-color: var(--accent); color: var(--accent-text); }
 
-        .toggle-btn:hover { background-color: #A855F7; color: #fff; }
-
-        .delete-btn {
-            background-color: #fdecea;
-            color: #b3261e;
-        }
-
+        .delete-btn { background-color: #fdecea; color: #b3261e; }
         .delete-btn:hover { background-color: #b3261e; color: #fff; }
 
         .success-msg {
@@ -175,17 +207,13 @@
             font-size: 13px;
             margin-bottom: 20px;
         }
-
-        .kumar-one-regular {
-            font-family: "Kumar One", serif;
-            font-weight: 400;
-            font-style: normal;
-            font-size: 30px;
-        }
-
     </style>
 </head>
 <body>
+
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
 
     <div class="sidebar">
         <div class="sidebar-logo">
@@ -194,7 +222,7 @@
         </div>
 
         <a href="{% url 'admin_dashboard' %}" class="nav-item">Dashboard</a>
-        <a href="#" class="nav-item">Manage Appointments</a>
+        <a href="{% url 'manage_appointments' %}" class="nav-item">Manage Appointments</a>
         <a href="#" class="nav-item">Customers</a>
         <a href="{% url 'manage_services' %}" class="nav-item active">Services</a>
         <a href="#" class="nav-item">Profile</a>
@@ -274,6 +302,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-toggle-btn').innerHTML = isDark
+                ? moonIcon
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        }
+    </script>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -13,17 +13,66 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg: #f2f2f2;
+            --panel-bg: #ffffff;
+            --text: #111111;
+            --text-muted: #666666;
+            --panel-text: #111111;
+            --card-bg: rgba(0,0,0,0.03);
+            --card-border: rgba(0,0,0,0.12);
+            --input-bg: rgba(0,0,0,0.04);
+            --input-border: rgba(0,0,0,0.15);
+            --accent: #000000;
+            --accent-text: #ffffff;
+            --accent-hover: #333333;
+        }
+
+        html[data-theme="dark"] {
+            --bg: #000000;
+            --panel-bg: #000000;
+            --text: #f5f5f5;
+            --text-muted: #999999;
+            --panel-text: #ffffff;
+            --card-bg: rgba(255,255,255,0.04);
+            --card-border: rgba(255,255,255,0.14);
+            --input-bg: rgba(255,255,255,0.06);
+            --input-border: rgba(255,255,255,0.18);
+            --accent: #ffffff;
+            --accent-text: #000000;
+            --accent-hover: #dddddd;
+        }
+
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             min-height: 100vh;
-            background-color: #000;
+            background-color: var(--bg);
             overflow-x: hidden;
         }
 
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .theme-toggle svg { width: 20px; height: 20px; }
+
         .left-panel {
             flex: 1;
-            background: radial-gradient(circle at 30% 30%, #1a1a1a 0%, #000 70%);
+            background: var(--panel-bg);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -31,22 +80,27 @@
             padding: 60px;
         }
 
-        .left-panel img {
-            width: 500px;
-            max-width: 90%;
+        .brand-block {
+            width: 100%;
+            max-width: 620px;
+        }
+
+        .brand-block img {
+            width: 100%;
             margin-bottom: 10px;
         }
 
         .brand-name {
             font-family: "Kumar One", serif;
-            color: #ec9105;
+            color: var(--panel-text);
             font-size: 80px;
             letter-spacing: 3px;
             text-align: left;
         }
 
         .tagline {
-            color: #851cf6;
+            color: var(--panel-text);
+            opacity: 0.75;
             font-family: "Press Start 2P", system-ui;
             font-style: normal;
             font-size: 40px;
@@ -60,7 +114,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #000;
+            background-color: var(--bg);
             padding: 20px;
         }
 
@@ -69,10 +123,9 @@
             max-width: 400px;
             border-radius: 20px;
             padding: 45px 38px;
-            background-color: rgba(255,255,255,0.04);
+            background-color: var(--card-bg);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 8px 32px rgba(168,85,247,0.15);
+            border: 1px solid var(--card-border);
             overflow: hidden;
             -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
@@ -80,10 +133,9 @@
         .tabs {
             display: flex;
             margin-bottom: 28px;
-            background-color: rgba(255,255,255,0.05);
+            background-color: var(--input-bg);
             border-radius: 12px;
             padding: 4px;
-            border: none;
         }
 
         .tab {
@@ -92,16 +144,14 @@
             padding: 10px;
             cursor: pointer;
             font-weight: bold;
-            color: #999;
+            color: var(--text-muted);
             border-radius: 9px;
             transition: all 0.2s ease;
         }
 
         .tab.active {
-            background-color: #A855F7;
-            color: #fff;
-            border-radius: 9px;
-            border-bottom: none;
+            background-color: var(--accent);
+            color: var(--accent-text);
         }
 
         .form-group {
@@ -112,29 +162,24 @@
             display: block;
             font-size: 13px;
             margin-bottom: 6px;
-            color: #ccc;
+            color: var(--text-muted);
         }
 
         input {
             width: 100%;
             padding: 12px 14px;
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
-            background-color: rgba(255,255,255,0.06);
-            color: #fff;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
+            background-color: var(--input-bg);
+            color: var(--text);
+            transition: border-color 0.2s ease;
         }
 
         input:focus {
             outline: none;
-            border-color: #A855F7;
-            background-color: rgba(255,255,255,0.09);
-        }
-
-        input::placeholder {
-            color: #777;
+            border-color: var(--accent);
         }
 
         .password-wrapper {
@@ -156,15 +201,15 @@
             justify-content: center;
             width: 30px;
             height: 30px;
-            color: #fff;
-            background-color: #A855F7;
+            color: var(--text-muted);
+            background-color: transparent;
             border: none;
             border-radius: 6px;
             padding: 0;
         }
 
         .toggle-password:hover {
-            background-color: #9333EA;
+            color: var(--text);
         }
 
         .toggle-password svg {
@@ -175,20 +220,20 @@
         button.submit-btn {
             width: 100%;
             padding: 13px;
-            background: linear-gradient(135deg, #A855F7, #7C3AED);
-            color: #fff;
+            background-color: var(--accent);
+            color: var(--accent-text);
             border: none;
             border-radius: 10px;
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.15s ease, background-color 0.15s ease;
         }
 
         button.submit-btn:hover {
+            background-color: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(168,85,247,0.4);
         }
 
         .error-msg {
@@ -223,25 +268,17 @@
             font-size: 12px;
             margin-top: 4px;
         }
-
-        .brand-block {
-            width: 100%;
-            max-width: 620px;
-        }
-
-        .brand-block img {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
     <div class="left-panel">
     <div class="brand-block">
-        <img src="{% static 'appointments/images/blacklogo3.png' %}" alt="CodeCut Logo">
+        <img src="{% static 'appointments/images/blacklogogif.gif' %}" alt="CodeCut Logo" id="theme-logo">
         <div class="brand-name">CodeCut</div>
         <div class="tagline">Book. Fade.<br>Repeat.</div>
     </div>
@@ -350,6 +387,23 @@
                 btn.innerHTML = eyeIcon;
             }
         }
+
+        const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+            const logo = document.getElementById('theme-logo');
+            logo.src = isDark
+                ? "{% static 'appointments/images/whitelogogif.gif' %}"
+                : "{% static 'appointments/images/blacklogogif.gif' %}";
+
+            document.getElementById('theme-toggle-btn').innerHTML = isDark
+                ? moonIcon
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+}
     </script>
 
 </body>

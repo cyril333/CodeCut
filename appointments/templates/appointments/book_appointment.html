@@ -87,12 +87,12 @@
             color: var(--text);
         }
 
-        select option {
-            background-color: var(--input-bg);
-            color: var(--text);
-        }
-
         select:focus, input:focus { outline: none; border-color: var(--accent); }
+
+        select option {
+            background-color: #ffffff;
+            color: #111111;
+        }
 
         button {
             width: 100%;
@@ -177,6 +177,32 @@
                 ? moonIcon
                 : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
         }
+
+        const dateInput = document.querySelector('input[name="appointment_date"]');
+        const timeSelect = document.querySelector('select[name="appointment_time"]');
+        const allOptions = Array.from(timeSelect.options).map(opt => ({ value: opt.value, text: opt.text }));
+
+        function refreshAvailableSlots() {
+            const selectedDate = dateInput.value;
+            if (!selectedDate) return;
+
+            fetch(`/api/booked-slots/?date=${selectedDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    const booked = data.booked;
+                    timeSelect.innerHTML = '';
+                    allOptions.forEach(opt => {
+                        if (!booked.includes(opt.value)) {
+                            const option = document.createElement('option');
+                            option.value = opt.value;
+                            option.text = opt.text;
+                            timeSelect.appendChild(option);
+                        }
+                    });
+                });
+        }
+
+        dateInput.addEventListener('change', refreshAvailableSlots);
     </script>
 
 </body>

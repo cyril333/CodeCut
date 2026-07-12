@@ -145,6 +145,18 @@
             color: var(--text-muted);
             font-size: 14px;
         }
+
+        .badge {
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 14px;
+        }
+
+        .badge.pending { color: #3b82f6; }
+        .badge.confirmed { color: #22c55e; }
+        .badge.cancelled { color: #ef4444; }
+        .badge.paid { color: #22c55e; }
+        .badge.unpaid { color: #ef4444; }
     </style>
 </head>
 <body>
@@ -156,7 +168,7 @@
         </button>
     </div>
 
-    <h1>Welcome, {{ request.user.profile.first_name }}.</h1>
+    <h1>Welcome, {{ request.user.profile.first_name }}</h1>
 
     {% if messages %}
         {% for message in messages %}
@@ -176,7 +188,9 @@
             {% for appt in appointments %}
                 <div class="appt-row">
                     <strong>{{ appt.service.name }}</strong> — {{ appt.appointment_date }} at {{ appt.appointment_time }}
-                    <br><span class="appt-meta">Status: {{ appt.get_status_display }} | Payment: {{ appt.get_pay_status_display }}</span>
+                    <br>
+                    <span class="appt-meta">Status:</span> <span class="badge {{ appt.status }}">{{ appt.get_status_display }}</span> |
+                    <span class="appt-meta">Payment:</span> <span class="badge {{ appt.pay_status }}">{{ appt.get_pay_status_display }}</span>
                 </div>
             {% empty %}
                 <p class="empty-msg">No appointments booked yet.</p>

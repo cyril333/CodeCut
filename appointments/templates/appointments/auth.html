@@ -82,18 +82,26 @@
 
         .brand-block {
             width: 100%;
-            max-width: 620px;
+            max-width: 420px;
+            position: relative;
         }
 
         .brand-block img {
             width: 100%;
-            margin-bottom: 10px;
+            display: block;
+        }
+
+        .brand-overlay {
+            position: absolute;
+            bottom: 8%;
+            left: 8%;
+            right: 8%;
         }
 
         .brand-name {
             font-family: "Kumar One", serif;
             color: var(--panel-text);
-            font-size: 80px;
+            font-size: 50px;
             letter-spacing: 3px;
             text-align: left;
         }
@@ -103,9 +111,9 @@
             opacity: 0.75;
             font-family: "Press Start 2P", system-ui;
             font-style: normal;
-            font-size: 40px;
-            letter-spacing: 8px;
-            line-height: 1.4;
+            font-size: 20px;
+            letter-spacing: 2px;
+            line-height: 1.6;
             text-align: left;
         }
 
@@ -279,8 +287,10 @@
     <div class="left-panel">
     <div class="brand-block">
         <img src="{% static 'appointments/images/blacklogogif.gif' %}" alt="CodeCut Logo" id="theme-logo">
-        <div class="brand-name">CodeCut</div>
-        <div class="tagline">Book. Fade.<br>Repeat.</div>
+        <div class="brand-overlay">
+            <div class="brand-name">CodeCut</div>
+            <div class="tagline">Book. Fade.<br>Repeat.</div>
+        </div>
     </div>
     </div>
 

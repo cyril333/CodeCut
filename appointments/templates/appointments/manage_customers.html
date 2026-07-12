@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap" rel="stylesheet">
+    <title>Manage Customers — CodeCut</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f2f2f2;
+            --sidebar-bg: #000000;
+            --sidebar-text: #cccccc;
+            --sidebar-text-active: #ffffff;
+            --text: #111111;
+            --text-muted: #888888;
+            --card-bg: #ffffff;
+            --card-border: rgba(0,0,0,0.06);
+            --accent: #000000;
+            --accent-text: #ffffff;
+            --row-border: #eeeeee;
+        }
+
+        html[data-theme="dark"] {
+            --bg: #0a0a0a;
+            --sidebar-bg: #000000;
+            --sidebar-text: #999999;
+            --sidebar-text-active: #ffffff;
+            --text: #f5f5f5;
+            --text-muted: #999999;
+            --card-bg: #141414;
+            --card-border: rgba(255,255,255,0.08);
+            --accent: #ffffff;
+            --accent-text: #000000;
+            --row-border: rgba(255,255,255,0.08);
+        }
+
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; display: flex; min-height: 100vh; background-color: var(--bg); }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .theme-toggle svg { width: 20px; height: 20px; }
+
+        .sidebar { width: 250px; background-color: var(--sidebar-bg); color: #fff; display: flex; flex-direction: column; padding: 30px 20px; }
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+        .sidebar-logo img { width: 36px; }
+
+        .kumar-one-regular {
+            font-family: "Kumar One", serif;
+            font-weight: 400;
+            font-size: 30px;
+            color: #fff;
+        }
+
+        .nav-item { display: block; padding: 12px 14px; border-radius: 8px; color: var(--sidebar-text); text-decoration: none; font-size: 14px; margin-bottom: 6px; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.08); color: var(--sidebar-text-active); }
+        .nav-item.active { background-color: var(--accent); color: var(--accent-text); font-weight: bold; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-link { display: block; padding: 12px 14px; color: #f87171; text-decoration: none; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 18px; }
+
+        .main-content { flex: 1; padding: 40px; }
+        .topbar { margin-bottom: 30px; }
+        .topbar h1 { font-size: 26px; color: var(--text); }
+
+        .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px 8px; font-size: 14px; border-bottom: 1px solid var(--row-border); color: var(--text); }
+        th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+
+        .action-btn {
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .delete-btn { background-color: #fdecea; color: #b3261e; }
+        .delete-btn:hover { background-color: #b3261e; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="{% static 'appointments/images/blacklogo3.png' %}" alt="CodeCut">
+            <div class="kumar-one-regular">CodeCut</div>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="nav-item">Dashboard</a>
+        <a href="{% url 'manage_appointments' %}" class="nav-item">Manage Appointments</a>
+        <a href="{% url 'manage_customers' %}" class="nav-item active">Customers</a>
+        <a href="{% url 'manage_services' %}" class="nav-item">Services</a>
+        <a href="{% url 'profile_view' %}" class="nav-item">Profile</a>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar"><h1>Customers</h1></div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.first_name }}</td>
+                        <td>{{ customer.last_name }}</td>
+                        <td>{{ customer.user.email }}</td>
+                        <td>{{ customer.contact_number|default:"—" }}</td>
+                        <td>
+                            <form method="post" action="{% url 'delete_customer' customer.id %}" style="display:inline;" onsubmit="return confirm('Delete this customer? This will also remove their appointment history.');">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn delete-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No customers registered yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-toggle-btn').innerHTML = isDark
+                ? moonIcon
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        }
+    </script>
+
+</body>
+</html>

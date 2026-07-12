@@ -197,9 +197,9 @@
 
         <a href="{% url 'admin_dashboard' %}" class="nav-item active">Dashboard</a>
         <a href="{% url 'manage_appointments' %}" class="nav-item">Manage Appointments</a>
-        <a href="#" class="nav-item">Customers</a>
+        <a href="{% url 'manage_customers' %}" class="nav-item">Customers</a>
         <a href="{% url 'manage_services' %}" class="nav-item">Manage Services</a>
-        <a href="#" class="nav-item">Profile</a>
+        <a href="{% url 'profile_view' %}" class="nav-item">Profile</a>
 
         <div class="sidebar-footer">
             <a href="{% url 'logout' %}" class="logout-link">Logout</a>
@@ -214,17 +214,17 @@
 
         <div class="cards-grid">
             <div class="stat-card">
-                <div class="label">Pending Appointments</div>
-                <div class="value">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Confirmed Today</div>
-                <div class="value">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Total Customers</div>
-                <div class="value">—</div>
-            </div>
+            <div class="label">Pending Appointments</div>
+            <div class="value">{{ pending_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Confirmed Today</div>
+            <div class="value">{{ confirmed_today_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Customers</div>
+            <div class="value">{{ total_customers_count }}</div>
+        </div>
         </div>
 
         <div class="placeholder-box">

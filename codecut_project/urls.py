@@ -15,4 +15,9 @@ urlpatterns = [
     path('book-appointment/', views.book_appointment, name='book_appointment'),
     path('dashboard/admin/appointments/confirm/<int:appointment_id>/', views.confirm_appointment, name='confirm_appointment'),
     path('dashboard/admin/appointments/cancel/<int:appointment_id>/', views.cancel_appointment, name='cancel_appointment'),
+    path('profile/', views.profile_view, name='profile_view'),
+    path('dashboard/admin/customers/', views.manage_customers, name='manage_customers'),
+    path('dashboard/admin/appointments/toggle-pay/<int:appointment_id>/', views.toggle_pay_status, name='toggle_pay_status'),
+    path('api/booked-slots/', views.get_booked_slots, name='get_booked_slots'),
+    path('dashboard/admin/customers/delete/<int:profile_id>/', views.delete_customer, name='delete_customer'),
 ]

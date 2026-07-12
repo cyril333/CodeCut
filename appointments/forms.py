@@ -32,6 +32,7 @@ class ServiceForm(forms.ModelForm):
         fields = ['name', 'bill', 'status']
 
 from .models import Appointment
+from .models import Profile
 
 TIME_SLOT_CHOICES = [
     ('09:00', '9:00 AM'),
@@ -50,6 +51,8 @@ TIME_SLOT_CHOICES = [
     ('16:30', '4:30 PM'),
 ]
 
+from django.utils import timezone
+
 class AppointmentForm(forms.ModelForm):
     appointment_time = forms.ChoiceField(choices=TIME_SLOT_CHOICES)
 
@@ -59,3 +62,19 @@ class AppointmentForm(forms.ModelForm):
         widgets = {
             'appointment_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['appointment_date'].widget.attrs['min'] = timezone.localdate().isoformat()
+
+    def clean_appointment_date(self):
+        date = self.cleaned_data.get('appointment_date')
+        if date < timezone.localdate():
+            raise forms.ValidationError("You cannot book an appointment in the past.")
+        return date
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'contact_number']
+

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegistrationForm
 from .models import Profile
+from django.core.exceptions import ValidationError
 
 
 def auth_view(request):
@@ -161,6 +162,10 @@ from .forms import AppointmentForm
 
 @login_required
 def book_appointment(request):
+    if request.user.profile.role != 'customer':
+        messages.error(request, "Only customer accounts can book appointments.")
+        return redirect('admin_dashboard')
+
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
@@ -231,10 +236,18 @@ def manage_customers(request):
 @login_required
 def toggle_pay_status(request, appointment_id):
     if request.user.profile.role != 'admin':
+        messages.error(request, "You are not authorized to perform this action.")
         return redirect('customer_dashboard')
+
     appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    if appointment.status != 'confirmed':
+        messages.error(request, "Payment status can only be updated for confirmed appointments.")
+        return redirect('manage_appointments')
+
     appointment.pay_status = 'unpaid' if appointment.pay_status == 'paid' else 'paid'
     appointment.save()
+    messages.success(request, "Payment status updated.")
     return redirect('manage_appointments')
 
 from django.http import JsonResponse
@@ -242,12 +255,19 @@ from django.http import JsonResponse
 @login_required
 def get_booked_slots(request):
     date = request.GET.get('date')
-    booked = Appointment.objects.filter(
-        appointment_date=date,
-        status__in=['pending', 'confirmed']
-    ).values_list('appointment_time', flat=True)
-    booked_times = [t.strftime('%H:%M') for t in booked]
-    return JsonResponse({'booked': booked_times})
+
+    if not date:
+        return JsonResponse({'error': 'No date provided.'}, status=400)
+
+    try:
+        booked = Appointment.objects.filter(
+            appointment_date=date,
+            status__in=['pending', 'confirmed']
+        ).values_list('appointment_time', flat=True)
+        booked_times = [t.strftime('%H:%M') for t in booked]
+        return JsonResponse({'booked': booked_times})
+    except (ValueError, ValidationError):
+        return JsonResponse({'error': 'Invalid date format.'}, status=400)
 
 @login_required
 def delete_customer(request, profile_id):

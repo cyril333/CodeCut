@@ -1,0 +1,1 @@
+web: gunicorn codecut_project.wsgi
